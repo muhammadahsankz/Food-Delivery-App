@@ -80,7 +80,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           GestureDetector(
             onTap: () {
               if (currentIndex == onboardingContent.length - 1) {
-                Navigator.pushNamed(context, RouteNames.signUpScreen);
+                Navigator.pushNamed(context, RouteNames.userOrAdminScreen);
               }
               _pageController.nextPage(
                   duration: Duration(microseconds: 100),

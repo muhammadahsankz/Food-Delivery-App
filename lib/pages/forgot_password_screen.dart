@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:food_delivery_app/routes/route_names.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';

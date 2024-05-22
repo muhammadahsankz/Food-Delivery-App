@@ -9,4 +9,8 @@ class RouteNames {
   static const bottomNavBarScreen = 'bottomNavBarScreen';
   static const onboardingScreen = 'onboardingScreen';
   static const forgotPasswordScreen = 'forgotPasswordScreen';
+  static const adminLoginScreen = 'adminLoginScreen';
+  static const adminHomeScreen = 'adminHomeScreen';
+  static const adminAddItemScreen = 'adminAddItemScreen';
+  static const userOrAdminScreen = 'userOrAdminScreen';
 }
