@@ -14,6 +14,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   final itemPriceController = TextEditingController();
   final itemDescriptionController = TextEditingController();
   final itemTypeController = TextEditingController();
+  final itemDeliveryTimeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -135,6 +136,31 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       hintText: 'e.g.  Asian',
+                      hintStyle: TextStyles.belowMainHeadingTextStyle(),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Text(
+                    'Delivery Time',
+                    style: TextStyles.nameHeadingTextStyle(size: 15),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    controller: itemDeliveryTimeController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter delivery time';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      hintText: 'e.g.  35',
                       hintStyle: TextStyles.belowMainHeadingTextStyle(),
                     ),
                   ),

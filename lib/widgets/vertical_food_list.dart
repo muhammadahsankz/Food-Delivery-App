@@ -8,10 +8,10 @@ class VerticalFoodList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 200,
       padding: EdgeInsets.symmetric(horizontal: 10),
       child: ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.all(10),
           itemCount: saladList.length,
           itemBuilder: (context, index) {
@@ -22,6 +22,12 @@ class VerticalFoodList extends StatelessWidget {
                   // Navigator.pushNamed(context, RouteNames.itemDetailsScreen,
                   //     arguments: {
                   //       'id': saladList[index].id,
+                  //       'image': 'assets/images/OIP Salad.png',
+                  //       'name': saladList[index].name,
+                  //       'type': saladList[index].type,
+                  //       'description': saladList[index].description,
+                  //       'deliveryTime': saladList[index].deliveryTime,
+                  //       'price': saladList[index].price,
                   //     });
                 },
                 child: Material(

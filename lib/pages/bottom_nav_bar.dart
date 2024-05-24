@@ -42,7 +42,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         height: 60,
         animationDuration: Duration(microseconds: 500),
         backgroundColor: CustomColors.white,
-        color: CustomColors.black,
+        color: CustomColors.green,
         items: [
           Icon(
             Icons.home_outlined,

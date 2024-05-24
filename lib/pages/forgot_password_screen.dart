@@ -19,90 +19,93 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Recover Your Password',
-                  style: TextStyles.nameHeadingTextStyle(size: 20),
-                ),
-                SizedBox(height: 40),
-                Text(
-                  'Enter your email',
-                  style: TextStyles.nameHeadingTextStyle(size: 15),
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: emailController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter email';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    prefixIcon: Icon(Icons.email_outlined),
-                    hintText: 'e.g. abc@gmail.com',
-                    hintStyle: TextStyles.belowMainHeadingTextStyle(),
+      body: Container(
+        child: Center(
+          child: Form(
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Recover Your Password',
+                    style: TextStyles.nameHeadingTextStyle(size: 20),
                   ),
-                ),
-                SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {}
-                    resetPassword();
-                  },
-                  child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 30),
-                    decoration: BoxDecoration(
+                  SizedBox(height: 40),
+                  Text(
+                    'Enter your email',
+                    style: TextStyles.nameHeadingTextStyle(size: 15),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Enter email to reset the password';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
-                        color: CustomColors.orangeFirst),
-                    child: Center(
-                      child: isLoading
-                          ? SizedBox(
-                              height: 25,
-                              width: 25,
-                              child: CircularProgressIndicator(),
-                            )
-                          : Text(
-                              'Send Email',
-                              style: TextStyles.nameHeadingTextStyle(size: 15),
-                            ),
+                      ),
+                      prefixIcon: Icon(Icons.email_outlined),
+                      hintText: 'e.g. abc@gmail.com',
+                      hintStyle: TextStyles.belowMainHeadingTextStyle(),
                     ),
                   ),
-                ),
-                SizedBox(height: 70),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                      style: TextStyles.belowMainHeadingTextStyle(),
-                    ),
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () =>
-                          Navigator.pushNamed(context, RouteNames.signUpScreen),
-                      child: Text(
-                        "Create",
-                        style: TextStyles.nameHeadingTextStyle(size: 15),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {}
+                      resetPassword();
+                    },
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      margin: EdgeInsets.symmetric(horizontal: 30),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: CustomColors.orangeFirst),
+                      child: Center(
+                        child: isLoading
+                            ? SizedBox(
+                                height: 25,
+                                width: 25,
+                                child: CircularProgressIndicator(),
+                              )
+                            : Text(
+                                'Send Email',
+                                style:
+                                    TextStyles.nameHeadingTextStyle(size: 15),
+                              ),
                       ),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  SizedBox(height: 70),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account?",
+                        style: TextStyles.belowMainHeadingTextStyle(),
+                      ),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(
+                            context, RouteNames.signUpScreen),
+                        child: Text(
+                          "Create",
+                          style: TextStyles.nameHeadingTextStyle(size: 15),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

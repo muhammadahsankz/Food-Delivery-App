@@ -28,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Container(
             height: screenHeight / 2,
             width: screenWidth,
+            padding: EdgeInsets.only(top: 30),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -38,150 +39,148 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: screenHeight / 4),
-            height: screenHeight / 2,
-            width: screenWidth,
-            decoration: BoxDecoration(
-              color: CustomColors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
-            ),
-            child: Container(
-              margin: EdgeInsets.only(top: 30, left: 20, right: 20, bottom: 20),
-              padding:
-                  EdgeInsets.only(top: 20, bottom: 30, right: 20, left: 20),
-              width: screenWidth,
-              decoration: BoxDecoration(
-                // color: CustomColors.green,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Text(
-                      "Login",
-                      style: TextStyles.mainHeadingTextStyle(),
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter email';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Email',
-                        hintStyle: TextStyles.nameHeadingTextStyle(size: 15),
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: CustomColors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter password';
-                        }
-                        return null;
-                      },
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: 'Password',
-                        hintStyle: TextStyles.nameHeadingTextStyle(size: 15),
-                        prefixIcon: Icon(
-                          Icons.lock_outlined,
-                          color: CustomColors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () => Navigator.pushNamed(
-                          context, RouteNames.forgotPasswordScreen),
-                      child: Container(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          "Forgot Password?",
-                          style: TextStyles.nameHeadingTextStyle(size: 16),
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {}
-                        login();
-                      },
-                      child: Container(
-                        height: 50,
-                        padding: EdgeInsets.all(10),
-                        alignment: Alignment.centerRight,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: CustomColors.orangeFirst,
-                        ),
-                        child: Center(
-                          child: isLoading
-                              ? SizedBox(
-                                  height: 25,
-                                  width: 25,
-                                  child: CircularProgressIndicator())
-                              : Text(
-                                  "Login",
-                                  style:
-                                      TextStyles.nameHeadingTextStyle(size: 16),
-                                ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 80, bottom: 150),
             child: Column(
               children: [
                 Center(
                   child: Image.asset(
                       width: screenWidth / 1.5,
-                      height: 80,
-                      'assets/images/logo.png'),
-                ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account?",
-                      style: TextStyles.belowMainHeadingTextStyle(),
-                    ),
-                    SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: () =>
-                          Navigator.pushNamed(context, RouteNames.signUpScreen),
-                      child: Text(
-                        "SignUp",
-                        style: TextStyles.nameHeadingTextStyle(size: 15),
-                      ),
-                    ),
-                  ],
+                      height: 150,
+                      'assets/images/login.png'),
                 ),
               ],
             ),
-          )
+          ),
+          SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.only(top: screenHeight / 4),
+              height: screenHeight / 1.5,
+              width: screenWidth,
+              decoration: BoxDecoration(
+                color: CustomColors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+              child: Container(
+                margin: EdgeInsets.only(top: 30, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  // color: CustomColors.green,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Text(
+                        "Login",
+                        style: TextStyles.mainHeadingTextStyle(),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Email',
+                          hintStyle: TextStyles.nameHeadingTextStyle(size: 15),
+                          prefixIcon: Icon(
+                            Icons.email_outlined,
+                            color: CustomColors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      TextFormField(
+                        controller: passwordController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password is required';
+                          }
+                          return null;
+                        },
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          hintText: 'Password',
+                          hintStyle: TextStyles.nameHeadingTextStyle(size: 15),
+                          prefixIcon: Icon(
+                            Icons.lock_outlined,
+                            color: CustomColors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () => Navigator.pushNamed(
+                            context, RouteNames.forgotPasswordScreen),
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "Forgot Password?",
+                            style: TextStyles.nameHeadingTextStyle(size: 16),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 50),
+                      GestureDetector(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {}
+                          login();
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.all(10),
+                          alignment: Alignment.centerRight,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: CustomColors.orangeFirst,
+                          ),
+                          child: Center(
+                            child: isLoading
+                                ? SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: CircularProgressIndicator())
+                                : Text(
+                                    "Login",
+                                    style: TextStyles.nameHeadingTextStyle(
+                                        size: 16),
+                                  ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 50),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an account?",
+                            style: TextStyles.belowMainHeadingTextStyle(),
+                          ),
+                          SizedBox(width: 10),
+                          GestureDetector(
+                            onTap: () => Navigator.pushNamed(
+                                context, RouteNames.signUpScreen),
+                            child: Text(
+                              "SignUp",
+                              style: TextStyles.nameHeadingTextStyle(size: 15),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
