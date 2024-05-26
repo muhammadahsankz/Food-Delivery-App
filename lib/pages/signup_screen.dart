@@ -5,7 +5,7 @@ import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/services/shared_prefs.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
-import 'package:food_delivery_app/widgets/snackbar.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 import 'package:random_string/random_string.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -142,8 +142,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 50),
                       GestureDetector(
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {}
-                          signUp();
+                          if (_formKey.currentState!.validate()) {
+                            signUp();
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -199,9 +200,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   // Registration Fuction
   signUp() async {
+    isLoading = true;
+    setState(() {});
     try {
-      isLoading = true;
-      setState(() {});
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
@@ -229,15 +230,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
       Navigator.pushNamed(context, RouteNames.bottomNavBarScreen);
       CustomSnackbar.customSnackbar(context, 'Registered Successfully');
     } on FirebaseException catch (e) {
-      isLoading = true;
-      setState(() {});
       if (e.code == 'weak-password') {
-        CustomSnackbar.customSnackbar(context, 'Select a strong password');
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'Select a strong password',
+            backgroundColor: CustomColors.red);
       } else if (e.code == 'email-already-in-use') {
-        CustomSnackbar.customSnackbar(context, 'This email already exists');
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'This email already exists',
+            backgroundColor: CustomColors.red);
+      } else {
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, e.code,
+            backgroundColor: CustomColors.red);
       }
-      isLoading = false;
-      setState(() {});
     }
   }
 }

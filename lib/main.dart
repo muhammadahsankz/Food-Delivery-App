@@ -18,6 +18,7 @@ Future<void> main() async {
     appId: "1:624453794316:android:021e7fa3fed54ac3accc29",
     messagingSenderId: "624453794316",
     projectId: "food-delivery-app-fd20e",
+    // storageBucket: "gs://food-delivery-app-fd20e.appspot.com",
   ));
   runApp(const MyApp());
 }

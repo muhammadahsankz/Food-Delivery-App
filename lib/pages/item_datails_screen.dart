@@ -4,7 +4,6 @@ import 'package:food_delivery_app/styles/text_styles.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
   final dynamic data;
-
   const ItemDetailsScreen({super.key, required this.data});
 
   @override
@@ -12,7 +11,15 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
+  int totalPrice = 0;
   int quantity = 1;
+
+  @override
+  void initState() {
+    totalPrice = widget.data['price'];
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,9 +40,13 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
               children: [
                 Hero(
                     tag: 'itemImage${widget.data['id']}',
-                    child: Image.asset(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.network(
+                        widget.data['image'],
                         width: MediaQuery.of(context).size.width / 1.5,
-                        'assets/images/OIP Salad.png')),
+                      ),
+                    )),
               ],
             ),
             SizedBox(height: 20),
@@ -56,7 +67,8 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       onTap: () {
                         if (quantity > 1) {
                           quantity--;
-
+                          totalPrice = totalPrice -
+                              int.parse(widget.data['price'].toString());
                           setState(() {});
                         }
                       },
@@ -89,6 +101,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     InkWell(
                       onTap: () {
                         quantity++;
+                        totalPrice = widget.data['price'] + totalPrice;
                         setState(() {});
                       },
                       child: Container(
@@ -142,7 +155,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       style: TextStyles.nameHeadingTextStyle(size: 15),
                     ),
                     Text(
-                      '\$${widget.data['price'].toString()}',
+                      '\$$totalPrice',
                       style: TextStyles.nameHeadingTextStyle(size: 15),
                     ),
                   ],

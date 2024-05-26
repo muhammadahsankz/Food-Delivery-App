@@ -3,7 +3,7 @@ import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/services/shared_prefs.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
-import 'package:food_delivery_app/widgets/snackbar.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});

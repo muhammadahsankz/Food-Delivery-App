@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/routes/route_names.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
-import 'package:food_delivery_app/widgets/snackbar.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -52,7 +52,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      prefixIcon: Icon(Icons.email_outlined),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.only(left: 20, right: 10),
+                        child: Icon(Icons.email_outlined),
+                      ),
                       hintText: 'e.g. abc@gmail.com',
                       hintStyle: TextStyles.belowMainHeadingTextStyle(),
                     ),
@@ -60,8 +63,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
-                      if (_formKey.currentState!.validate()) {}
-                      resetPassword();
+                      if (_formKey.currentState!.validate()) {
+                        resetPassword();
+                      }
                     },
                     child: Container(
                       height: 50,
@@ -115,9 +119,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   //Reset Password Function
   resetPassword() async {
+    isLoading = true;
+    setState(() {});
     try {
-      isLoading = true;
-      setState(() {});
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: emailController.text);
       isLoading = false;
@@ -125,14 +129,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       CustomSnackbar.customSnackbar(
           context, 'Check email to reset the password');
     } on FirebaseAuthException catch (e) {
-      print(e.code);
-      isLoading = true;
-      setState(() {});
       if (e.code == 'user-not-found') {
-        CustomSnackbar.customSnackbar(context, 'Incorrect email');
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'No User found with this Email',
+            backgroundColor: CustomColors.red);
+      } else if (e.code == 'invalid-email') {
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'Invalid Email',
+            backgroundColor: CustomColors.red);
+      } else {
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, e.code,
+            backgroundColor: CustomColors.red);
       }
-      isLoading = false;
-      setState(() {});
     }
   }
 }

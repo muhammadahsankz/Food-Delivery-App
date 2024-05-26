@@ -1,6 +1,13 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:random_string/random_string.dart';
 
 class AdminAddItemScreen extends StatefulWidget {
   const AdminAddItemScreen({super.key});
@@ -15,7 +22,51 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   final itemDescriptionController = TextEditingController();
   final itemTypeController = TextEditingController();
   final itemDeliveryTimeController = TextEditingController();
+  List<String> dropdownItems = ['Burger', 'Pizza', 'Ice-Cream', 'Salad'];
+  String? dropdownValues;
   final _formKey = GlobalKey<FormState>();
+  final _imagePicker = ImagePicker();
+  File? selectedImage;
+
+  // Pick Image Function
+  Future getImage() async {
+    var image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    selectedImage = File(image!.path);
+    setState(() {});
+  }
+
+  // Upload Item on Firebase
+  uploadItem() async {
+    if (selectedImage != null &&
+        itemNameController.text != '' &&
+        itemPriceController.text != '' &&
+        itemDescriptionController.text != '' &&
+        itemTypeController.text != '' &&
+        itemDeliveryTimeController.text != '') {
+      String addId = randomAlphaNumeric(10);
+      Reference firebaseStorageRef = FirebaseStorage.instanceFor(
+              bucket: 'gs://food-delivery-app-fd20e.appspot.com')
+          .ref()
+          .child('itemImages')
+          .child(addId);
+      final UploadTask task = firebaseStorageRef.putFile(selectedImage!);
+      var downloadUrl = await (await task).ref.getDownloadURL();
+      Map<String, dynamic> addItem = {
+        'Image': downloadUrl,
+        'Name': itemNameController.text,
+        'Price': int.parse(itemPriceController.text),
+        'Description': itemDescriptionController.text,
+        'Type': itemTypeController.text,
+        'DeliveryTime': int.parse(itemDeliveryTimeController.text),
+      };
+      await FirestoreDatabaseMethods.addFoodItem(addItem, dropdownValues!)
+          .then((value) {
+        CustomSnackbar.customSnackbar(context, 'Item added Successfully');
+        Navigator.pop(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +81,11 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
               width: double.infinity,
               child: Row(
                 children: [
-                  Icon(Icons.arrow_back_ios_new_outlined),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(Icons.arrow_back_ios_new_outlined)),
                   SizedBox(width: 20),
                   Text(
                     'Add Item',
@@ -51,19 +106,38 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     style: TextStyles.nameHeadingTextStyle(size: 15),
                   ),
                   SizedBox(height: 10),
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 30),
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(40),
-                    ),
-                    child: Center(
-                      child: Icon(Icons.camera_alt_outlined),
-                    ),
-                  ),
+                  selectedImage == null
+                      ? GestureDetector(
+                          onTap: getImage,
+                          child: Container(
+                            height: 200,
+                            // width: 200,
+                            margin: EdgeInsets.symmetric(horizontal: 50),
+                            // padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            child: Center(
+                              child: Icon(Icons.camera_alt_outlined),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          height: 200,
+                          // width: 200,
+                          margin: EdgeInsets.symmetric(horizontal: 50),
+                          // padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            // border: Border.all(),
+
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(40),
+                              child:
+                                  Image.file(fit: BoxFit.fill, selectedImage!)),
+                        ),
                   SizedBox(height: 30),
                   Text(
                     'Name',
@@ -74,7 +148,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     controller: itemNameController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter item name';
+                        return 'Item Name is required';
                       }
                       return null;
                     },
@@ -99,7 +173,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     controller: itemPriceController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter item price';
+                        return 'Price is required';
                       }
                       return null;
                     },
@@ -124,7 +198,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     controller: itemTypeController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter item type';
+                        return 'Item type is required';
                       }
                       return null;
                     },
@@ -149,7 +223,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     controller: itemDeliveryTimeController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter delivery time';
+                        return 'Delivery time is required';
                       }
                       return null;
                     },
@@ -174,7 +248,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     controller: itemDescriptionController,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Enter item description';
+                        return 'Description is required';
                       }
                       return null;
                     },
@@ -197,11 +271,45 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                     style: TextStyles.nameHeadingTextStyle(size: 15),
                   ),
                   SizedBox(height: 10),
-                  Icon(Icons.arrow_drop_down),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(),
+                    ),
+                    child: Center(
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            alignment: Alignment.center,
+                            hint: Text(
+                              'Select Catregory',
+                              style: TextStyles.belowMainHeadingTextStyle(),
+                            ),
+                            value: dropdownValues,
+                            icon: Icon(Icons.keyboard_arrow_down),
+                            items: dropdownItems
+                                .map(
+                                  (item) => DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: TextStyles
+                                          .belowMainHeadingTextStyle(),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (newValue) {
+                              dropdownValues = newValue;
+                              setState(() {});
+                            }),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
                       if (_formKey.currentState!.validate()) {}
+                      uploadItem();
                     },
                     child: Container(
                       height: 50,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
 import 'package:food_delivery_app/widgets/food_category.dart';
@@ -14,6 +15,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool icecreem = false, pizza = false, salad = false, burger = true;
+  Stream? foodItemStream;
+
+  onLoad() async {
+    foodItemStream = await FirestoreDatabaseMethods.getFoodItem('Burger');
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    onLoad();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +75,13 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: ListView(
                   children: [
-                    HorizontalFoodList(),
+                    HorizontalFoodList(
+                      specificFoodItemStream: foodItemStream,
+                    ),
                     SizedBox(height: 20),
-                    VerticalFoodList(),
+                    VerticalFoodList(
+                      specificFoodItemStream: foodItemStream,
+                    ),
                   ],
                 ),
               ),
@@ -83,11 +100,13 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           FoodCategory(
-              onCategoryTap: () {
+              onCategoryTap: () async {
                 burger = true;
                 pizza = false;
                 icecreem = false;
                 salad = false;
+                foodItemStream =
+                    await FirestoreDatabaseMethods.getFoodItem('Burger');
                 setState(() {});
               },
               imageColor: burger ? CustomColors.white : CustomColors.black,
@@ -95,11 +114,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   burger ? CustomColors.green : CustomColors.white,
               imagePath: 'assets/images/burger.png'),
           FoodCategory(
-              onCategoryTap: () {
+              onCategoryTap: () async {
                 burger = false;
                 pizza = true;
                 icecreem = false;
                 salad = false;
+                foodItemStream =
+                    await FirestoreDatabaseMethods.getFoodItem('Pizza');
                 setState(() {});
               },
               imageColor: pizza ? CustomColors.white : CustomColors.black,
@@ -107,11 +128,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   pizza ? CustomColors.green : CustomColors.white,
               imagePath: 'assets/images/pizza.png'),
           FoodCategory(
-              onCategoryTap: () {
+              onCategoryTap: () async {
                 burger = false;
                 pizza = false;
                 icecreem = true;
                 salad = false;
+                foodItemStream =
+                    await FirestoreDatabaseMethods.getFoodItem('Ice-Cream');
                 setState(() {});
               },
               imageColor: icecreem ? CustomColors.white : CustomColors.black,
@@ -119,11 +142,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   icecreem ? CustomColors.green : CustomColors.white,
               imagePath: 'assets/images/ice-cream.png'),
           FoodCategory(
-              onCategoryTap: () {
+              onCategoryTap: () async {
                 burger = false;
                 pizza = false;
                 icecreem = false;
                 salad = true;
+                foodItemStream =
+                    await FirestoreDatabaseMethods.getFoodItem('Salad');
                 setState(() {});
               },
               imageColor: salad ? CustomColors.white : CustomColors.black,

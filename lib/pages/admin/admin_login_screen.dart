@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/routes/route_names.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
-import 'package:food_delivery_app/widgets/snackbar.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
@@ -14,6 +15,7 @@ class AdminLoginScreen extends StatefulWidget {
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
@@ -92,20 +94,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                       SizedBox(height: 30),
                       GestureDetector(
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {}
-                          if (usernameController.text == 'ahsan' &&
-                              passwordController.text == 'khanzada') {
-                            Navigator.pushNamed(
-                                context, RouteNames.adminHomeScreen);
-                            CustomSnackbar.customSnackbar(
-                                context, 'Login Successful');
-                          } else if (usernameController.text.isEmpty ||
-                              passwordController.text.isEmpty) {
-                            CustomSnackbar.customSnackbar(
-                                context, 'Enter username and password first');
-                          } else {
-                            CustomSnackbar.customSnackbar(
-                                context, 'Incorrect Username/Password');
+                          if (_formKey.currentState!.validate()) {
+                            loginAdmin();
                           }
                         },
                         child: Container(
@@ -116,10 +106,19 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             color: CustomColors.green,
                           ),
                           child: Center(
-                            child: Text(
-                              'Login',
-                              style: TextStyles.nameHeadingTextStyle(size: 15),
-                            ),
+                            child: isLoading
+                                ? SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: CircularProgressIndicator(
+                                      color: CustomColors.black45,
+                                    ),
+                                  )
+                                : Text(
+                                    'Login',
+                                    style: TextStyles.nameHeadingTextStyle(
+                                        size: 15),
+                                  ),
                           ),
                         ),
                       ),
@@ -132,5 +131,40 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         ),
       ),
     );
+  }
+
+  //Admin Login Function
+  loginAdmin() async {
+    isLoading = true;
+    setState(() {});
+    FirebaseFirestore.instance.collection('Admin').get().then((snapshot) {
+      snapshot.docs.forEach((result) {
+        if (result.data()['username'] != usernameController.text.trim() &&
+            result.data()['password'] != passwordController.text.trim()) {
+          isLoading = false;
+          setState(() {});
+          CustomSnackbar.customSnackbar(
+              context, 'Incorrect Username & Password',
+              backgroundColor: CustomColors.red);
+        } else if (result.data()['username'] !=
+            usernameController.text.trim()) {
+          isLoading = false;
+          setState(() {});
+          CustomSnackbar.customSnackbar(context, 'Incorrect Username',
+              backgroundColor: CustomColors.red);
+        } else if (result.data()['password'] !=
+            passwordController.text.trim()) {
+          isLoading = false;
+          setState(() {});
+          CustomSnackbar.customSnackbar(context, 'Incorrect Password',
+              backgroundColor: CustomColors.red);
+        } else {
+          isLoading = false;
+          setState(() {});
+          Navigator.pushNamed(context, RouteNames.adminHomeScreen);
+          CustomSnackbar.customSnackbar(context, 'Login Successful');
+        }
+      });
+    });
   }
 }

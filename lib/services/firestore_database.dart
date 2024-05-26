@@ -14,4 +14,12 @@ class FirestoreDatabaseMethods {
         .doc(id)
         .update({'Wallet': amount});
   }
+
+  static Future addFoodItem(Map<String, dynamic> userInfo, String name) async {
+    return await FirebaseFirestore.instance.collection(name).add(userInfo);
+  }
+
+  static Future<Stream<QuerySnapshot>> getFoodItem(String name) async {
+    return await FirebaseFirestore.instance.collection(name).snapshots();
+  }
 }

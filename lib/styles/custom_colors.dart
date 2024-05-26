@@ -9,4 +9,5 @@ class CustomColors {
   static const orangeSecond = Color(0xffe74b1a);
   static const green = Colors.green;
   static const grey = Colors.grey;
+  static const red = Colors.red;
 }

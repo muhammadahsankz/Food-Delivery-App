@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery_app/routes/route_names.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
-import 'package:food_delivery_app/widgets/snackbar.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -131,8 +131,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: 50),
                       GestureDetector(
                         onTap: () {
-                          if (_formKey.currentState!.validate()) {}
-                          login();
+                          if (_formKey.currentState!.validate()) {
+                            login();
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -188,9 +189,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   //Login Function
   login() async {
+    isLoading = true;
+    setState(() {});
     try {
-      isLoading = true;
-      setState(() {});
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
@@ -200,17 +201,32 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushNamed(context, RouteNames.bottomNavBarScreen);
       CustomSnackbar.customSnackbar(context, 'Login Successful');
     } on FirebaseException catch (e) {
-      isLoading = true;
-      setState(() {});
       if (e.code == 'user-not-found') {
-        CustomSnackbar.customSnackbar(context, 'User not found');
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'User not found',
+            backgroundColor: CustomColors.red);
+      } else if (e.code == 'invalid-email') {
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'Invalid Email',
+            backgroundColor: CustomColors.red);
       } else if (e.code == 'wrong-password') {
-        CustomSnackbar.customSnackbar(context, 'Wrong Password');
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'Invalid Password',
+            backgroundColor: CustomColors.red);
       } else if (e.code == 'invalid-credential') {
-        CustomSnackbar.customSnackbar(context, 'Invalid Username/Password');
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, 'Invalid Username/Password',
+            backgroundColor: CustomColors.red);
+      } else {
+        isLoading = false;
+        setState(() {});
+        CustomSnackbar.customSnackbar(context, e.code,
+            backgroundColor: CustomColors.red);
       }
-      isLoading = false;
-      setState(() {});
     }
   }
 }
