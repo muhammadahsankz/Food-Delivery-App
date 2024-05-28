@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery_app/services/firestore_database.dart';
+import 'package:food_delivery_app/services/shared_prefs.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
+import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 
 class ItemDetailsScreen extends StatefulWidget {
   final dynamic data;
@@ -11,11 +14,22 @@ class ItemDetailsScreen extends StatefulWidget {
 }
 
 class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
-  int totalPrice = 0;
+  double totalPrice = 0;
   int quantity = 1;
+  String? id;
+  getSharedPrefs() async {
+    id = await SharedPrefsHelper.getUserId();
+    setState(() {});
+  }
+
+  onLoad() async {
+    await getSharedPrefs();
+    setState(() {});
+  }
 
   @override
   void initState() {
+    onLoad();
     totalPrice = widget.data['price'];
     super.initState();
   }
@@ -161,20 +175,34 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   ],
                 ),
                 Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: CustomColors.black45),
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Text(
-                        'Add to cart',
-                        style: TextStyles.nameHeadingTextStyle(size: 15),
-                      ),
-                      SizedBox(width: 10),
-                      Icon(Icons.shopping_cart_outlined)
-                    ],
+                GestureDetector(
+                  onTap: () async {
+                    Map<String, dynamic> addFoodToCart = {
+                      'Name': widget.data['name'],
+                      'Quantity': quantity,
+                      'TotalAmount': totalPrice,
+                      'Image': widget.data['image'],
+                    };
+                    await FirestoreDatabaseMethods.addFoodToCart(
+                        addFoodToCart, id!);
+                    CustomSnackbar.customSnackbar(
+                        context, 'Item successfully added to cart');
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: CustomColors.black45),
+                    padding: EdgeInsets.all(10),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Add to cart',
+                          style: TextStyles.nameHeadingTextStyle(size: 15),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(Icons.shopping_cart_outlined)
+                      ],
+                    ),
                   ),
                 )
               ],

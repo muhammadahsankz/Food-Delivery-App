@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/constants/salad_items_list.dart';
+import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
 
 class VerticalFoodList extends StatefulWidget {
@@ -120,9 +121,11 @@ class _VerticalFoodListState extends State<VerticalFoodList> {
                       );
                     })
                 : SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularProgressIndicator(),
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(
+                      color: CustomColors.green,
+                    ),
                   );
           }),
     );

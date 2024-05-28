@@ -22,6 +22,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
   final itemDescriptionController = TextEditingController();
   final itemTypeController = TextEditingController();
   final itemDeliveryTimeController = TextEditingController();
+  bool isLoading = false;
   List<String> dropdownItems = ['Burger', 'Pizza', 'Ice-Cream', 'Salad'];
   String? dropdownValues;
   final _formKey = GlobalKey<FormState>();
@@ -37,6 +38,8 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
 
   // Upload Item on Firebase
   uploadItem() async {
+    isLoading = true;
+    setState(() {});
     if (selectedImage != null &&
         itemNameController.text != '' &&
         itemPriceController.text != '' &&
@@ -54,7 +57,7 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
       Map<String, dynamic> addItem = {
         'Image': downloadUrl,
         'Name': itemNameController.text,
-        'Price': int.parse(itemPriceController.text),
+        'Price': double.parse(itemPriceController.text),
         'Description': itemDescriptionController.text,
         'Type': itemTypeController.text,
         'DeliveryTime': int.parse(itemDeliveryTimeController.text),
@@ -63,6 +66,8 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
           .then((value) {
         CustomSnackbar.customSnackbar(context, 'Item added Successfully');
         Navigator.pop(context);
+        isLoading = false;
+        setState(() {});
       });
     }
   }
@@ -308,8 +313,9 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                   SizedBox(height: 30),
                   GestureDetector(
                     onTap: () {
-                      if (_formKey.currentState!.validate()) {}
-                      uploadItem();
+                      if (_formKey.currentState!.validate()) {
+                        uploadItem();
+                      }
                     },
                     child: Container(
                       height: 50,
@@ -320,10 +326,19 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
                         color: CustomColors.green,
                       ),
                       child: Center(
-                        child: Text(
-                          'Add Item',
-                          style: TextStyles.nameHeadingTextStyle(size: 15),
-                        ),
+                        child: isLoading
+                            ? SizedBox(
+                                height: 25,
+                                width: 25,
+                                child: CircularProgressIndicator(
+                                  color: CustomColors.black45,
+                                ),
+                              )
+                            : Text(
+                                'Add Item',
+                                style:
+                                    TextStyles.nameHeadingTextStyle(size: 15),
+                              ),
                       ),
                     ),
                   )

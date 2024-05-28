@@ -117,12 +117,82 @@ class _HorizontalFoodListState extends State<HorizontalFoodList> {
                         ),
                       );
                     })
-                : SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularProgressIndicator(
-                      color: CustomColors.black45,
-                    ));
+                : ListView(
+                    padding: EdgeInsets.all(10),
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      for (int i = 0; i < 3; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              width: 150,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Container(
+                                          width: 120,
+                                          height: 120,
+                                          decoration: BoxDecoration(
+                                            color: CustomColors.grey.shade400,
+                                            borderRadius:
+                                                BorderRadius.circular(30),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: CustomColors.grey.shade400,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Text(
+                                      '                    ',
+                                      style: TextStyles.nameHeadingTextStyle(
+                                          size: 15),
+                                    ),
+                                  ),
+                                  SizedBox(height: 3),
+                                  Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: CustomColors.grey.shade400,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Text(
+                                      '',
+                                      style: TextStyles
+                                          .belowMainHeadingTextStyle(),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: CustomColors.grey.shade400,
+                                      borderRadius: BorderRadius.circular(30),
+                                    ),
+                                    child: Text(
+                                      '          ',
+                                      style: TextStyles.nameHeadingTextStyle(
+                                          size: 15),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
+                  );
           }),
     );
   }

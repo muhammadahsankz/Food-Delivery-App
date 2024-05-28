@@ -8,7 +8,7 @@ class FirestoreDatabaseMethods {
         .set(userInfo);
   }
 
-  static Future updateUserWallet(String id, String amount) async {
+  static Future updateUserWallet(String id, double amount) async {
     return await FirebaseFirestore.instance
         .collection('users')
         .doc(id)
@@ -21,5 +21,28 @@ class FirestoreDatabaseMethods {
 
   static Future<Stream<QuerySnapshot>> getFoodItem(String name) async {
     return await FirebaseFirestore.instance.collection(name).snapshots();
+  }
+
+  static Future addFoodToCart(Map<String, dynamic> userInfo, String id) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .collection('Cart')
+        .add(userInfo);
+  }
+
+  static Future<Map<String, dynamic>?> getUserDataFromFirebase(
+      String id) async {
+    final ref = await FirebaseFirestore.instance.collection('users').doc(id);
+    final data = await ref.get();
+    return data.data();
+  }
+
+  static Future<Stream<QuerySnapshot>> getFoodCart(String id) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .collection('Cart')
+        .snapshots();
   }
 }

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/routes/route_names.dart';
+import 'package:food_delivery_app/services/firestore_database.dart';
+import 'package:food_delivery_app/services/shared_prefs.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
 import 'package:food_delivery_app/widgets/custom_snackbar.dart';
@@ -196,6 +198,17 @@ class _LoginScreenState extends State<LoginScreen> {
         email: emailController.text,
         password: passwordController.text,
       );
+
+      // To store data locally
+      final data = await FirestoreDatabaseMethods.getUserDataFromFirebase(
+          emailController.text);
+      if (data != null) {
+        SharedPrefsHelper.setUserId(data['Id']);
+        SharedPrefsHelper.setUserName(data['Name']);
+        SharedPrefsHelper.setUserEmail(data['Email']);
+        SharedPrefsHelper.setUserWallet(data['Wallet']);
+      } else {}
+
       isLoading = false;
       setState(() {});
       Navigator.pushNamed(context, RouteNames.bottomNavBarScreen);

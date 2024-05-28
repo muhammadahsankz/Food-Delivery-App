@@ -3,12 +3,13 @@ import 'package:food_delivery_app/styles/custom_colors.dart';
 
 class TextStyles {
   // Name Heading TextStyle
-  static TextStyle nameHeadingTextStyle({double size = 18}) {
+  static TextStyle nameHeadingTextStyle(
+      {double size = 18, Color color = CustomColors.black}) {
     return TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: size,
       fontFamily: 'Poppins',
-      color: CustomColors.black,
+      color: color,
     );
   }
 
@@ -23,10 +24,10 @@ class TextStyles {
   }
 
   // Main Heading TextStyle
-  static TextStyle belowMainHeadingTextStyle() {
+  static TextStyle belowMainHeadingTextStyle({double fontSize = 15}) {
     return TextStyle(
       fontWeight: FontWeight.w100,
-      fontSize: 15,
+      fontSize: fontSize,
       fontFamily: 'Poppins',
       color: CustomColors.black45,
     );

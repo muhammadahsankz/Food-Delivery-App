@@ -6,7 +6,6 @@ import 'package:food_delivery_app/services/shared_prefs.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
 import 'package:food_delivery_app/widgets/custom_snackbar.dart';
-import 'package:random_string/random_string.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -209,20 +208,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       // To store data on Firebase Firestore
-      String id = randomAlphaNumeric(10);
+      // String id = randomAlphaNumeric(10);
       Map<String, dynamic> addUserInfo = {
         'Name': nameController.text,
         'Email': emailController.text,
-        'Wallet': '0',
-        'Id': id,
+        'Wallet': 0.0,
+        'Id': emailController.text,
       };
-      await FirestoreDatabaseMethods.addUserDetails(addUserInfo, id);
+      await FirestoreDatabaseMethods.addUserDetails(
+          addUserInfo, emailController.text);
 
       // To store data locally
-      await SharedPrefsHelper.setUserId(id);
+      await SharedPrefsHelper.setUserId(emailController.text);
       await SharedPrefsHelper.setUserName(nameController.text);
       await SharedPrefsHelper.setUserEmail(emailController.text);
-      await SharedPrefsHelper.setUserWallet('0');
+      await SharedPrefsHelper.setUserWallet(0.0);
 
       // Other
       isLoading = false;

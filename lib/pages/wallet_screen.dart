@@ -15,7 +15,7 @@ class WalletScreen extends StatefulWidget {
 class _WalletScreenState extends State<WalletScreen> {
   List<int> alreadyDefinedAmounts = [100, 500, 1000, 2000];
   int alreadyDefinedAmount = 0;
-  String? wallet;
+  double? wallet;
   String? userId;
   bool isLoading = false;
 
@@ -123,7 +123,7 @@ class _WalletScreenState extends State<WalletScreen> {
           GestureDetector(
             onTap: () {
               if (alreadyDefinedAmount != 0) {
-                wallet = '${int.parse(wallet!) + alreadyDefinedAmount}';
+                wallet = wallet! + alreadyDefinedAmount;
                 updateWallet();
                 alreadyDefinedAmount = 0;
                 CustomSnackbar.customSnackbar(

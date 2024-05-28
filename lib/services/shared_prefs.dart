@@ -1,10 +1,11 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsHelper {
-  static const String userIdKey = 'USERKEY';
+  static const String userIdKey = 'USERIDKEY';
   static const String userNameKey = 'USERNAMEKEY';
   static const String userEmailKey = 'USEREMAILKEY';
   static const String userWalletKey = 'USERWALLETKEY';
+  static const String userProfileKey = 'USERPROFILEKEY';
 
   // Methods to save User Data in Shared Preferences
   static Future<bool> setUserId(String getUserId) async {
@@ -22,9 +23,14 @@ class SharedPrefsHelper {
     return prefs.setString(userEmailKey, getUserEmail);
   }
 
-  static Future<bool> setUserWallet(String getUserWallet) async {
+  static Future<bool> setUserWallet(double getUserWallet) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(userWalletKey, getUserWallet);
+    return prefs.setDouble(userWalletKey, getUserWallet);
+  }
+
+  static Future<bool> setUserProfile(String getUserProfile) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(userProfileKey, getUserProfile);
   }
 
   // Methods to retrieve User Data from Shared Preferences
@@ -43,8 +49,13 @@ class SharedPrefsHelper {
     return prefs.getString(userEmailKey);
   }
 
-  static Future<String?> getUserWallet() async {
+  static Future<double?> getUserWallet() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(userWalletKey);
+    return prefs.getDouble(userWalletKey);
+  }
+
+  static Future<String?> getUserProfile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(userProfileKey);
   }
 }
