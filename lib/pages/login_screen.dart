@@ -36,8 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  CustomColors.orangeFirst,
-                  CustomColors.orangeSecond,
+                  CustomColors.green,
+                  CustomColors.green.shade300,
                 ],
               ),
             ),
@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.only(top: screenHeight / 4),
-              height: screenHeight / 1.5,
+              // height: screenHeight / 1.5,
               width: screenWidth,
               decoration: BoxDecoration(
                 color: CustomColors.white,
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.centerRight,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: CustomColors.orangeFirst,
+                            color: CustomColors.green,
                           ),
                           child: Center(
                             child: isLoading
@@ -178,6 +178,28 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 30),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RouteNames.bottomNavBarScreen);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Login as Guest',
+                              style: TextStyles.nameHeadingTextStyle(size: 12),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -207,11 +229,12 @@ class _LoginScreenState extends State<LoginScreen> {
         SharedPrefsHelper.setUserName(data['Name']);
         SharedPrefsHelper.setUserEmail(data['Email']);
         SharedPrefsHelper.setUserWallet(data['Wallet']);
+        SharedPrefsHelper.setUserProfilePic(data['ProfilePic']);
       } else {}
 
       isLoading = false;
       setState(() {});
-      Navigator.pushNamed(context, RouteNames.bottomNavBarScreen);
+      Navigator.pushReplacementNamed(context, RouteNames.bottomNavBarScreen);
       CustomSnackbar.customSnackbar(context, 'Login Successful');
     } on FirebaseException catch (e) {
       if (e.code == 'user-not-found') {

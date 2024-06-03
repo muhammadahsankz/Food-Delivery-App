@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/services/shared_prefs.dart';
@@ -16,7 +17,7 @@ class _WalletScreenState extends State<WalletScreen> {
   List<int> alreadyDefinedAmounts = [100, 500, 1000, 2000];
   int alreadyDefinedAmount = 0;
   double? wallet;
-  String? userId;
+  String? userId, userName;
   bool isLoading = false;
 
   @override
@@ -48,7 +49,9 @@ class _WalletScreenState extends State<WalletScreen> {
                 Row(
                   children: [
                     Text(
-                      'Hello Ahsan,',
+                      userName == null || userName == ''
+                          ? (userName == null ? 'Welcome,' : 'Hello,')
+                          : 'Hello $userName,',
                       style: TextStyles.nameHeadingTextStyle(),
                     ),
                     Spacer(),
@@ -121,8 +124,11 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
           SizedBox(height: 50),
           GestureDetector(
-            onTap: () {
-              if (alreadyDefinedAmount != 0) {
+            onTap: () async {
+              if (await FirebaseAuth.instance.currentUser == null) {
+                CustomSnackbar.customSnackbar(context, 'Login First',
+                    backgroundColor: CustomColors.red);
+              } else if (alreadyDefinedAmount != 0) {
                 wallet = wallet! + alreadyDefinedAmount;
                 updateWallet();
                 alreadyDefinedAmount = 0;
@@ -130,7 +136,8 @@ class _WalletScreenState extends State<WalletScreen> {
                     context, 'Amount added successfully');
               } else {
                 CustomSnackbar.customSnackbar(
-                    context, 'Select an amount to add');
+                    context, 'Select an amount to add',
+                    backgroundColor: CustomColors.red);
               }
             },
             child: Container(
@@ -168,6 +175,7 @@ class _WalletScreenState extends State<WalletScreen> {
   getSharePrefsData() async {
     wallet = await SharedPrefsHelper.getUserWallet();
     userId = await SharedPrefsHelper.getUserId();
+    userName = await SharedPrefsHelper.getUserName();
     setState(() {});
   }
 
@@ -177,6 +185,7 @@ class _WalletScreenState extends State<WalletScreen> {
     setState(() {});
     await SharedPrefsHelper.setUserWallet(wallet!);
     await FirestoreDatabaseMethods.updateUserWallet(userId!, wallet!);
+
     isLoading = false;
     setState(() {});
   }

@@ -120,12 +120,100 @@ class _VerticalFoodListState extends State<VerticalFoodList> {
                         ),
                       );
                     })
-                : SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: CircularProgressIndicator(
-                      color: CustomColors.green,
-                    ),
+                : ListView(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.all(10),
+                    children: [
+                      for (int i = 0; i < 2; i++)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Material(
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              padding: EdgeInsets.all(10),
+                              width: 300,
+                              height: 130,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          color: CustomColors.grey.shade400,
+                                        ),
+                                        width: 100,
+                                        height: 100,
+                                      ),
+                                      SizedBox(width: 10),
+                                      Container(
+                                        height: 100,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 15),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    CustomColors.grey.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                              child: Text(
+                                                '                                 ',
+                                                style: TextStyles
+                                                    .nameHeadingTextStyle(
+                                                        size: 15),
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    CustomColors.grey.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                              child: Text(
+                                                '                    ',
+                                                style: TextStyles
+                                                    .nameHeadingTextStyle(
+                                                        size: 15),
+                                              ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    CustomColors.grey.shade400,
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                              ),
+                                              child: Text(
+                                                '               ',
+                                                style: TextStyles
+                                                    .nameHeadingTextStyle(
+                                                        size: 15),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
                   );
           }),
     );

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/services/shared_prefs.dart';
@@ -190,14 +191,20 @@ class _OrderScreenState extends State<OrderScreen> {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () async {
-                          isLoading = true;
-                          double amount = wallet - totalAmount2;
-                          await FirestoreDatabaseMethods.updateUserWallet(
-                              id!, amount);
-                          await SharedPrefsHelper.setUserWallet(amount);
-                          isLoading = false;
-                          CustomSnackbar.customSnackbar(
-                              context, 'Your order is placed successfully');
+                          if (await FirebaseAuth.instance.currentUser != null) {
+                            isLoading = true;
+                            double amount = wallet - totalAmount2;
+                            await FirestoreDatabaseMethods.updateUserWallet(
+                                id!, amount);
+                            await SharedPrefsHelper.setUserWallet(amount);
+                            isLoading = false;
+                            CustomSnackbar.customSnackbar(
+                                context, 'Your order is placed successfully');
+                          } else {
+                            CustomSnackbar.customSnackbar(
+                                context, 'Login First',
+                                backgroundColor: CustomColors.red);
+                          }
                         },
                         child: Container(
                           padding: EdgeInsets.symmetric(

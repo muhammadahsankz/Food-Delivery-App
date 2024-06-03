@@ -5,7 +5,8 @@ class SharedPrefsHelper {
   static const String userNameKey = 'USERNAMEKEY';
   static const String userEmailKey = 'USEREMAILKEY';
   static const String userWalletKey = 'USERWALLETKEY';
-  static const String userProfileKey = 'USERPROFILEKEY';
+  static const String userProfilePicKey = 'USERPROFILEPICKEY';
+  static const String foodCategoryKey = 'FOODCATEGORYKEY';
 
   // Methods to save User Data in Shared Preferences
   static Future<bool> setUserId(String getUserId) async {
@@ -28,9 +29,14 @@ class SharedPrefsHelper {
     return prefs.setDouble(userWalletKey, getUserWallet);
   }
 
-  static Future<bool> setUserProfile(String getUserProfile) async {
+  static Future<bool> setUserProfilePic(String getUserProfilePic) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(userProfileKey, getUserProfile);
+    return prefs.setString(userProfilePicKey, getUserProfilePic);
+  }
+
+  static Future<bool> setFoodCategory(String getFoodCategory) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(foodCategoryKey, getFoodCategory);
   }
 
   // Methods to retrieve User Data from Shared Preferences
@@ -54,8 +60,13 @@ class SharedPrefsHelper {
     return prefs.getDouble(userWalletKey);
   }
 
-  static Future<String?> getUserProfile() async {
+  static Future<String?> getUserProfilePic() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(userProfileKey);
+    return prefs.getString(userProfilePicKey);
+  }
+
+  static Future<String?> getFoodCategory() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(foodCategoryKey);
   }
 }

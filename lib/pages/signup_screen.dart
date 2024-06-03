@@ -37,8 +37,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  CustomColors.orangeFirst,
-                  CustomColors.orangeSecond,
+                  CustomColors.green,
+                  CustomColors.green.shade300,
                 ],
               ),
             ),
@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.only(top: screenHeight / 4),
-              height: screenHeight / 1.3,
+              // height: screenHeight / 1.3,
               width: screenWidth,
               decoration: BoxDecoration(
                 color: CustomColors.white,
@@ -151,7 +151,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           alignment: Alignment.centerRight,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: CustomColors.orangeFirst,
+                            color: CustomColors.green,
                           ),
                           child: Center(
                             child: isLoading
@@ -186,6 +186,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 30),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                              context, RouteNames.bottomNavBarScreen);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Login as Guest',
+                              style: TextStyles.nameHeadingTextStyle(size: 12),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -214,6 +236,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'Email': emailController.text,
         'Wallet': 0.0,
         'Id': emailController.text,
+        'ProfilePic':
+            'https://firebasestorage.googleapis.com/v0/b/food-delivery-app-fd20e.appspot.com/o/itemImages%2FLAb1p3Ury2?alt=media&token=ea1325fe-9fc7-481a-8f2a-770a31c22d73',
       };
       await FirestoreDatabaseMethods.addUserDetails(
           addUserInfo, emailController.text);
@@ -223,11 +247,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       await SharedPrefsHelper.setUserName(nameController.text);
       await SharedPrefsHelper.setUserEmail(emailController.text);
       await SharedPrefsHelper.setUserWallet(0.0);
+      await SharedPrefsHelper.setUserProfilePic(
+          'https://firebasestorage.googleapis.com/v0/b/food-delivery-app-fd20e.appspot.com/o/itemImages%2FLAb1p3Ury2?alt=media&token=ea1325fe-9fc7-481a-8f2a-770a31c22d73');
 
       // Other
       isLoading = false;
       setState(() {});
-      Navigator.pushNamed(context, RouteNames.bottomNavBarScreen);
+      Navigator.pushReplacementNamed(context, RouteNames.bottomNavBarScreen);
       CustomSnackbar.customSnackbar(context, 'Registered Successfully');
     } on FirebaseException catch (e) {
       if (e.code == 'weak-password') {

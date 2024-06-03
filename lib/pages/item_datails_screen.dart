@@ -52,15 +52,19 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Hero(
-                    tag: 'itemImage${widget.data['id']}',
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Image.network(
-                        widget.data['image'],
-                        width: MediaQuery.of(context).size.width / 1.5,
-                      ),
-                    )),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  height: 200,
+                  child: Hero(
+                      tag: 'itemImage${widget.data['id']}',
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(30),
+                        child: Image.network(
+                          widget.data['image'],
+                          width: MediaQuery.of(context).size.width / 1.5,
+                        ),
+                      )),
+                ),
               ],
             ),
             SizedBox(height: 20),

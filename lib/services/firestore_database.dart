@@ -45,4 +45,11 @@ class FirestoreDatabaseMethods {
         .collection('Cart')
         .snapshots();
   }
+
+  static Future uploadProfilePic(String id, String pic) async {
+    return await FirebaseFirestore.instance
+        .collection('users')
+        .doc(id)
+        .update({'ProfilePic': pic});
+  }
 }

@@ -64,9 +64,9 @@ class _AdminAddItemScreenState extends State<AdminAddItemScreen> {
       };
       await FirestoreDatabaseMethods.addFoodItem(addItem, dropdownValues!)
           .then((value) {
-        CustomSnackbar.customSnackbar(context, 'Item added Successfully');
-        Navigator.pop(context);
         isLoading = false;
+        Navigator.pop(context);
+        CustomSnackbar.customSnackbar(context, 'Item added Successfully');
         setState(() {});
       });
     }
