@@ -24,8 +24,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final _imagePicker = ImagePicker();
   File? selectedImage;
   String? id;
-  String defaultProfilePic =
-      'https://firebasestorage.googleapis.com/v0/b/food-delivery-app-fd20e.appspot.com/o/itemImages%2FLAb1p3Ury2?alt=media&token=ea1325fe-9fc7-481a-8f2a-770a31c22d73';
   String? profilePic =
       'https://firebasestorage.googleapis.com/v0/b/food-delivery-app-fd20e.appspot.com/o/itemImages%2FLAb1p3Ury2?alt=media&token=ea1325fe-9fc7-481a-8f2a-770a31c22d73';
   String? name, email;
@@ -59,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final UploadTask task = firebaseStorageRef.putFile(selectedImage!);
       var downloadUrl = await (await task).ref.getDownloadURL();
       await SharedPrefsHelper.setUserProfilePic(downloadUrl);
+      profilePic = await SharedPrefsHelper.getUserProfilePic();
       await FirestoreDatabaseMethods.uploadProfilePic(id!, downloadUrl);
       setState(() {});
     }
@@ -107,23 +106,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     shape: BoxShape.circle,
                   ),
                   child: Material(
-                    elevation: 5,
-                    borderRadius: BorderRadius.circular(35),
-                    child:
-                        selectedImage == null && profilePic == defaultProfilePic
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(35),
-                                child: Image.network(defaultProfilePic),
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(35),
-                                child: selectedImage != null &&
-                                        profilePic != defaultProfilePic
-                                    ? Image.file(
-                                        selectedImage!,
-                                      )
-                                    : Image.network(profilePic!)),
-                  ),
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(35),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(35),
+                        child: profilePic == ''
+                            ? Image.asset('assets/images/profilepic.png')
+                            : Image.network(
+                                profilePic!,
+                                loadingBuilder:
+                                    (context, imageProvider, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return Image.network(
+                                      profilePic!,
+                                    );
+                                  }
+                                  return Center(
+                                    child: SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Center(
+                                          child: CircularProgressIndicator(
+                                        color: CustomColors.black45,
+                                      )),
+                                    ),
+                                  );
+                                },
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Text('Error fetching image');
+                                },
+                              ),
+                      )),
                 ),
               ),
               SizedBox(height: 30),
@@ -245,17 +258,73 @@ We are not responsible for any errors or issues related to payment processing.''
               SizedBox(height: 20),
               GestureDetector(
                   onTap: () async {
-                    await SharedPrefsHelper.setFoodCategory('Burger');
-                    await SharedPrefsHelper.setUserEmail('');
-                    await SharedPrefsHelper.setUserId('');
-                    await SharedPrefsHelper.setUserName('');
-                    await SharedPrefsHelper.setUserProfilePic(
-                        defaultProfilePic);
-                    await SharedPrefsHelper.setUserWallet(0);
-                    if (FirebaseAuth.instance.currentUser != null) {
-                      AuthMethods.deleteAccount();
-                    }
-                    Navigator.pushNamed(context, RouteNames.signUpScreen);
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Container(
+                              height: 250,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'Delete Account?',
+                                    style: TextStyles.nameHeadingTextStyle(),
+                                  ),
+                                  SizedBox(height: 30),
+                                  Text(
+                                    'Are you sure you want to delete the account?',
+                                    style: TextStyles.nameHeadingTextStyle(
+                                        size: 15),
+                                  ),
+                                  SizedBox(height: 5),
+                                  Text(
+                                    'Once account is permanently deleted it cannot be recovered.',
+                                    style: TextStyles.belowMainHeadingTextStyle(
+                                        fontSize: 13),
+                                  ),
+                                  Spacer(),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await SharedPrefsHelper.setFoodCategory(
+                                          'Burger');
+                                      await SharedPrefsHelper.setUserEmail('');
+                                      await SharedPrefsHelper.setUserId('');
+                                      await SharedPrefsHelper.setUserName('');
+                                      await SharedPrefsHelper.setUserProfilePic(
+                                          '');
+                                      await SharedPrefsHelper.setUserWallet(0);
+                                      if (FirebaseAuth.instance.currentUser !=
+                                          null) {
+                                        AuthMethods.deleteAccount();
+                                      }
+                                      Navigator.pushNamed(
+                                          context, RouteNames.signUpScreen);
+                                      CustomSnackbar.customSnackbar(context,
+                                          'Your Account is permanently deleted');
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: 150,
+                                      decoration: BoxDecoration(
+                                        color: CustomColors.red.shade300,
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          'Delete',
+                                          style:
+                                              TextStyles.nameHeadingTextStyle(
+                                                  size: 15),
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          );
+                        });
                   },
                   child: secondProfileContainer('Delete Account')),
               SizedBox(height: 20),
@@ -265,11 +334,13 @@ We are not responsible for any errors or issues related to payment processing.''
                     await SharedPrefsHelper.setUserEmail('');
                     await SharedPrefsHelper.setUserId('');
                     await SharedPrefsHelper.setUserName('');
-                    await SharedPrefsHelper.setUserProfilePic(
-                        defaultProfilePic);
+                    await SharedPrefsHelper.setUserProfilePic('');
                     await SharedPrefsHelper.setUserWallet(0);
                     AuthMethods.logoutUser();
                     Navigator.pushNamed(context, RouteNames.signUpScreen);
+                    CustomSnackbar.customSnackbar(
+                        context, 'Logout Successfully',
+                        backgroundColor: CustomColors.red.shade300);
                   },
                   child: secondProfileContainer('Logout')),
             ],

@@ -52,4 +52,19 @@ class FirestoreDatabaseMethods {
         .doc(id)
         .update({'ProfilePic': pic});
   }
+
+  static Future<bool> checkFoodCart(String id) async {
+    try {
+      final cartRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(id)
+          .collection('Cart');
+
+      final querySnapshot = await cartRef.get();
+      return querySnapshot.docs.isEmpty;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

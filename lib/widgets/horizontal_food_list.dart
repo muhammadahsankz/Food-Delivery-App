@@ -51,8 +51,8 @@ class _HorizontalFoodListState extends State<HorizontalFoodList> {
                         padding: const EdgeInsets.only(right: 10),
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, RouteNames.itemDetailsScreen,
+                            Navigator.pushNamed(context,
+                                RouteNames.horizontalListItemDetailsScreen,
                                 arguments: {
                                   'id': index,
                                   'image': documentSnapshot['Image'],
@@ -78,7 +78,7 @@ class _HorizontalFoodListState extends State<HorizontalFoodList> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Hero(
-                                        tag: 'itemImage${saladList[index].id}',
+                                        tag: 'itemImage${index}',
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -86,6 +86,31 @@ class _HorizontalFoodListState extends State<HorizontalFoodList> {
                                             documentSnapshot['Image'],
                                             width: 120,
                                             height: 120,
+                                            loadingBuilder: (context,
+                                                imageProvider,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return Image.network(
+                                                  documentSnapshot['Image'],
+                                                  width: 120,
+                                                  height: 120,
+                                                );
+                                              }
+                                              return SizedBox(
+                                                width: 120,
+                                                height: 120,
+                                                child: Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                  color: CustomColors.black45,
+                                                )),
+                                              );
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Text(
+                                                  'Error fetching image');
+                                            },
                                           ),
                                         ),
                                       ),

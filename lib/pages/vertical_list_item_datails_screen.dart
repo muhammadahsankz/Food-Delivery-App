@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/services/firestore_database.dart';
 import 'package:food_delivery_app/services/shared_prefs.dart';
@@ -5,15 +6,17 @@ import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
 import 'package:food_delivery_app/widgets/custom_snackbar.dart';
 
-class ItemDetailsScreen extends StatefulWidget {
+class VerticalListItemDetailsScreen extends StatefulWidget {
   final dynamic data;
-  const ItemDetailsScreen({super.key, required this.data});
+  const VerticalListItemDetailsScreen({super.key, required this.data});
 
   @override
-  State<ItemDetailsScreen> createState() => _ItemDetailsScreenState();
+  State<VerticalListItemDetailsScreen> createState() =>
+      _VerticalListItemDetailsScreenState();
 }
 
-class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
+class _VerticalListItemDetailsScreenState
+    extends State<VerticalListItemDetailsScreen> {
   double totalPrice = 0;
   int quantity = 1;
   String? id;
@@ -56,12 +59,31 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   width: MediaQuery.of(context).size.width / 1.5,
                   height: 200,
                   child: Hero(
-                      tag: 'itemImage${widget.data['id']}',
+                      tag: 'itemImages${widget.data['id']}',
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                         child: Image.network(
                           widget.data['image'],
                           width: MediaQuery.of(context).size.width / 1.5,
+                          loadingBuilder:
+                              (context, imageProvider, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return Image.network(
+                                widget.data['image'],
+                                width: MediaQuery.of(context).size.width / 1.5,
+                              );
+                            }
+                            return SizedBox(
+                              width: MediaQuery.of(context).size.width / 1.5,
+                              child: Center(
+                                  child: CircularProgressIndicator(
+                                color: CustomColors.black45,
+                              )),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Text('Error fetching image');
+                          },
                         ),
                       )),
                 ),
@@ -86,7 +108,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                         if (quantity > 1) {
                           quantity--;
                           totalPrice = totalPrice -
-                              int.parse(widget.data['price'].toString());
+                              double.parse(widget.data['price'].toString());
                           setState(() {});
                         }
                       },
@@ -181,16 +203,21 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                 Spacer(),
                 GestureDetector(
                   onTap: () async {
-                    Map<String, dynamic> addFoodToCart = {
-                      'Name': widget.data['name'],
-                      'Quantity': quantity,
-                      'TotalAmount': totalPrice,
-                      'Image': widget.data['image'],
-                    };
-                    await FirestoreDatabaseMethods.addFoodToCart(
-                        addFoodToCart, id!);
-                    CustomSnackbar.customSnackbar(
-                        context, 'Item successfully added to cart');
+                    if (await FirebaseAuth.instance.currentUser != null) {
+                      Map<String, dynamic> addFoodToCart = {
+                        'Name': widget.data['name'],
+                        'Quantity': quantity,
+                        'TotalAmount': totalPrice,
+                        'Image': widget.data['image'],
+                      };
+                      await FirestoreDatabaseMethods.addFoodToCart(
+                          addFoodToCart, id!);
+                      CustomSnackbar.customSnackbar(
+                          context, 'Item successfully added to cart');
+                    } else {
+                      CustomSnackbar.customSnackbar(context, 'Login First',
+                          backgroundColor: CustomColors.red);
+                    }
                   },
                   child: Container(
                     decoration: BoxDecoration(

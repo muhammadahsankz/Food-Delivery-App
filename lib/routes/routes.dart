@@ -4,7 +4,8 @@ import 'package:food_delivery_app/pages/admin/admin_home_screen.dart';
 import 'package:food_delivery_app/pages/admin/admin_login_screen.dart';
 import 'package:food_delivery_app/pages/bottom_nav_bar.dart';
 import 'package:food_delivery_app/pages/forgot_password_screen.dart';
-import 'package:food_delivery_app/pages/item_datails_screen.dart';
+import 'package:food_delivery_app/pages/horizontal_list_item_datails_screen%20copy.dart';
+import 'package:food_delivery_app/pages/vertical_list_item_datails_screen.dart';
 import 'package:food_delivery_app/pages/login_screen.dart';
 import 'package:food_delivery_app/pages/onboarding_screen.dart';
 import 'package:food_delivery_app/pages/signup_screen.dart';
@@ -14,9 +15,14 @@ import 'package:food_delivery_app/routes/route_names.dart';
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
-      case RouteNames.itemDetailsScreen:
+      case RouteNames.horizontalListItemDetailsScreen:
         return MaterialPageRoute(
-            builder: (context) => ItemDetailsScreen(
+            builder: (context) => HorizontalListItemDetailsScreen(
+                  data: routeSettings.arguments as Map,
+                ));
+      case RouteNames.verticalListItemDetailsScreen:
+        return MaterialPageRoute(
+            builder: (context) => VerticalListItemDetailsScreen(
                   data: routeSettings.arguments as Map,
                 ));
       case RouteNames.loginScreen:

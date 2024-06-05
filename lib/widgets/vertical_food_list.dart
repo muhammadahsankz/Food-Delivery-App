@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery_app/constants/salad_items_list.dart';
+import 'package:food_delivery_app/routes/route_names.dart';
 import 'package:food_delivery_app/styles/custom_colors.dart';
 import 'package:food_delivery_app/styles/text_styles.dart';
 
@@ -38,16 +39,19 @@ class _VerticalFoodListState extends State<VerticalFoodList> {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: InkWell(
                           onTap: () {
-                            // Navigator.pushNamed(context, RouteNames.itemDetailsScreen,
-                            //     arguments: {
-                            //       'id': saladList[index].id,
-                            //       'image': 'assets/images/OIP Salad.png',
-                            //       'name': saladList[index].name,
-                            //       'type': saladList[index].type,
-                            //       'description': saladList[index].description,
-                            //       'deliveryTime': saladList[index].deliveryTime,
-                            //       'price': saladList[index].price,
-                            //     });
+                            Navigator.pushNamed(context,
+                                RouteNames.verticalListItemDetailsScreen,
+                                arguments: {
+                                  'id': index,
+                                  'image': documentSnapshot['Image'],
+                                  'name': documentSnapshot['Name'],
+                                  'type': documentSnapshot['Type'],
+                                  'description':
+                                      documentSnapshot['Description'],
+                                  'deliveryTime':
+                                      documentSnapshot['DeliveryTime'],
+                                  'price': documentSnapshot['Price'],
+                                });
                           },
                           child: Material(
                             elevation: 5,
@@ -63,7 +67,7 @@ class _VerticalFoodListState extends State<VerticalFoodList> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Hero(
-                                        tag: 'itemImages${saladList[index].id}',
+                                        tag: 'itemImages${index}',
                                         child: ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -71,6 +75,31 @@ class _VerticalFoodListState extends State<VerticalFoodList> {
                                             documentSnapshot['Image'],
                                             width: 100,
                                             height: 100,
+                                            loadingBuilder: (context,
+                                                imageProvider,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return Image.network(
+                                                  documentSnapshot['Image'],
+                                                  width: 100,
+                                                  height: 100,
+                                                );
+                                              }
+                                              return SizedBox(
+                                                width: 100,
+                                                height: 100,
+                                                child: Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                  color: CustomColors.black45,
+                                                )),
+                                              );
+                                            },
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Text(
+                                                  'Error fetching image');
+                                            },
                                           ),
                                         ),
                                       ),

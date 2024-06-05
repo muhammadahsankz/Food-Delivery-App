@@ -28,7 +28,8 @@ class _OrderScreenState extends State<OrderScreen> {
 
   onLoad() async {
     getSharedPrefs();
-    foodStream = await FirestoreDatabaseMethods.getFoodCart('a@g.com');
+    id = await SharedPrefsHelper.getUserId();
+    foodStream = await FirestoreDatabaseMethods.getFoodCart(id!);
     setState(() {});
   }
 
@@ -191,15 +192,27 @@ class _OrderScreenState extends State<OrderScreen> {
                       SizedBox(height: 10),
                       GestureDetector(
                         onTap: () async {
+                          print(await FirestoreDatabaseMethods.checkFoodCart(
+                              id!));
                           if (await FirebaseAuth.instance.currentUser != null) {
-                            isLoading = true;
-                            double amount = wallet - totalAmount2;
-                            await FirestoreDatabaseMethods.updateUserWallet(
-                                id!, amount);
-                            await SharedPrefsHelper.setUserWallet(amount);
-                            isLoading = false;
-                            CustomSnackbar.customSnackbar(
-                                context, 'Your order is placed successfully');
+                            if (await FirestoreDatabaseMethods.checkFoodCart(
+                                id!)) {
+                              CustomSnackbar.customSnackbar(
+                                  context, 'Cart is Empty',
+                                  backgroundColor: CustomColors.red);
+                            } else {
+                              isLoading = true;
+                              // setState(() {});
+                              double amount = wallet - totalAmount2;
+                              await FirestoreDatabaseMethods.updateUserWallet(
+                                  id!, amount);
+                              await SharedPrefsHelper.setUserWallet(amount);
+                              isLoading = false;
+                              // setState(() {});
+
+                              CustomSnackbar.customSnackbar(
+                                  context, 'Your order is placed successfully');
+                            }
                           } else {
                             CustomSnackbar.customSnackbar(
                                 context, 'Login First',
@@ -207,25 +220,29 @@ class _OrderScreenState extends State<OrderScreen> {
                           }
                         },
                         child: Container(
+                          height: 45,
+                          width: 180,
                           padding: EdgeInsets.symmetric(
                               horizontal: 30, vertical: 10),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: CustomColors.green.shade300,
                           ),
-                          child: isLoading
-                              ? SizedBox(
-                                  height: 25,
-                                  width: 25,
-                                  child: CircularProgressIndicator(
-                                    color: CustomColors.green,
+                          child: Center(
+                            child: isLoading
+                                ? SizedBox(
+                                    height: 25,
+                                    width: 25,
+                                    child: CircularProgressIndicator(
+                                      color: CustomColors.black45,
+                                    ),
+                                  )
+                                : Text(
+                                    'Checkout',
+                                    style: TextStyles.nameHeadingTextStyle(
+                                        size: 15),
                                   ),
-                                )
-                              : Text(
-                                  'Checkout',
-                                  style:
-                                      TextStyles.nameHeadingTextStyle(size: 15),
-                                ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),

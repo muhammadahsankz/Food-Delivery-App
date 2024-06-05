@@ -1,6 +1,8 @@
 class RouteNames {
   static const homeScreen = 'homeScreen';
-  static const itemDetailsScreen = 'itemDetailsScreen';
+  static const horizontalListItemDetailsScreen =
+      'horizontalListItemDetailsScreen';
+  static const verticalListItemDetailsScreen = 'verticalListItemDetailsScreen';
   static const walletScreen = 'walletScreen';
   static const orderScreen = 'orderScreen';
   static const profileScreen = 'profileScreen';

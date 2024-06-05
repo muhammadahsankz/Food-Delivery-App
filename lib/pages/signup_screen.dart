@@ -236,8 +236,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         'Email': emailController.text,
         'Wallet': 0.0,
         'Id': emailController.text,
-        'ProfilePic':
-            'https://firebasestorage.googleapis.com/v0/b/food-delivery-app-fd20e.appspot.com/o/itemImages%2FLAb1p3Ury2?alt=media&token=ea1325fe-9fc7-481a-8f2a-770a31c22d73',
+        'ProfilePic': '',
       };
       await FirestoreDatabaseMethods.addUserDetails(
           addUserInfo, emailController.text);
@@ -247,8 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       await SharedPrefsHelper.setUserName(nameController.text);
       await SharedPrefsHelper.setUserEmail(emailController.text);
       await SharedPrefsHelper.setUserWallet(0.0);
-      await SharedPrefsHelper.setUserProfilePic(
-          'https://firebasestorage.googleapis.com/v0/b/food-delivery-app-fd20e.appspot.com/o/itemImages%2FLAb1p3Ury2?alt=media&token=ea1325fe-9fc7-481a-8f2a-770a31c22d73');
+      await SharedPrefsHelper.setUserProfilePic('');
 
       // Other
       isLoading = false;

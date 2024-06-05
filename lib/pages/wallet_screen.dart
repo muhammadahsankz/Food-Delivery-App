@@ -73,7 +73,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 Image(
                   height: 50,
                   width: 50,
-                  image: AssetImage('assets/images/salad2.png'),
+                  image: AssetImage('assets/images/wallet.png'),
                 ),
                 SizedBox(width: 20),
                 Column(
