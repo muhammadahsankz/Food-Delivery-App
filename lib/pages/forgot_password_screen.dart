@@ -31,9 +31,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(height: 60),
-                    Image.asset(emailSent
-                        ? 'assets/images/forgotPasswordAfter.png'
-                        : 'assets/images/forgotPasswordBefore.png'),
+                    Image.asset(
+                        height: 250,
+                        emailSent == false
+                            ? 'assets/images/forgotPasswordBefore.png'
+                            : 'assets/images/forgotPasswordAfter.png'),
                     SizedBox(height: 20),
                     Text(
                       'Recover Your Password',
